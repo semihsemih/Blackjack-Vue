@@ -17,7 +17,7 @@ body {
 .croupier-area,
 .player-area {
     width: 75%;
-    height: 350px;
+    height: 50%;
     border: 1px solid white;
     margin-bottom: 25px;
     padding: 1rem;
