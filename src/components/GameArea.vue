@@ -1,29 +1,20 @@
 <template>
-  <div v-show="status" class="game-area">
-    <div class="croupier-area">
-      <div class="game-cards">
-        <div class="item" v-for="card in croupierHand" v-bind:key="card.id">
-          <img :src="require(`@/assets/img/cards/${card.id}.png`)" alt="" />
-        </div>
-        <!--        <div class="item"><img src="../assets/img/cards/7D.png" alt="" /></div>
-        <div class="item"><img src="../assets/img/cards/3S.png" alt="" /></div>
-        <div class="item"><img src="../assets/img/cards/5H.png" alt="" /></div>-->
-      </div>
+  <div class="game-area">
+    <h4 class="area-title">Croupier Hand</h4>
+    <div class="croupier-area animated fadeIn">
+      <GameCard :deck="croupierHand" />
     </div>
-    <div class="player-area">
-      <div class="game-cards">
-        <div class="item" v-for="card in playerHand" v-bind:key="card.id">
-          <img :src="require(`@/assets/img/cards/${card.id}.png`)" alt="" />
-        </div>
-      </div>
+    <div class="player-area animated fadeIn">
+      <GameCard :deck="playerHand" />
     </div>
+    <h4 class="area-title">Player Hand</h4>
   </div>
 </template>
 
 <script>
+import GameCard from "./GameCard";
 export default {
   name: "GameArea",
-  props: ["status"],
   data() {
     return {
       mainDeck: [
@@ -90,31 +81,31 @@ export default {
       // eslint-disable-next-line no-undef
       this.turnDeck = _.cloneDeep(this.mainDeck);
       while (this.playerHand.length < 2) {
-        this.pickCardForPlayer();
+        this.cardDealer(this.playerHand);
       }
       while (this.croupierHand.length < 2) {
-        this.pickCardForCroupier();
+        this.cardDealer(this.croupierHand);
       }
     },
-    pickCardForPlayer() {
+    cardDealer(hand) {
       const randomNumber = Math.floor(Math.random() * this.turnDeck.length);
       let selectedCard = this.turnDeck[randomNumber];
-      this.playerHand.push(selectedCard);
-      this.turnDeck.splice(this.turnDeck.indexOf(selectedCard), 1);
-    },
-    pickCardForCroupier() {
-      const randomNumber = Math.floor(Math.random() * this.turnDeck.length);
-      let selectedCard = this.turnDeck[randomNumber];
-      this.croupierHand.push(selectedCard);
+      hand.push(selectedCard);
       this.turnDeck.splice(this.turnDeck.indexOf(selectedCard), 1);
     }
   },
-  watch: {
-    status: function() {
-      this.gameStart();
-    }
+  components: {
+    GameCard
+  },
+  created() {
+    this.gameStart();
   }
 };
 </script>
 
-<style scoped></style>
+<style scoped>
+.area-title {
+  color: wheat;
+  font-weight: bold;
+}
+</style>
