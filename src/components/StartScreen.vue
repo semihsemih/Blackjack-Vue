@@ -4,10 +4,13 @@
       <img
         src="../assets/img/cards/aces.png"
         class="img-fluid"
-       alt="aces in my hand"/>
+        alt="aces in my hand"
+      />
     </div>
-    <div class="col-12 mt-5 d-flex justify-content-center animated fadeIn delay-1s">
-      <button class="btn btn-primary" @click="startGame">New Game</button>
+    <div
+      class="col-12 mt-5 d-flex justify-content-center animated fadeIn delay-1s"
+    >
+      <button class="btn btn-primary" @click="firstBet">New Game</button>
     </div>
   </div>
 </template>
@@ -18,8 +21,8 @@ import { eventBus } from "../main";
 export default {
   name: "StartScreen",
   methods: {
-    startGame() {
-        eventBus.$emit("changeComponent", "GameArea");
+    firstBet() {
+      eventBus.$emit("changeComponent", "StartBetArea");
     }
   }
 };

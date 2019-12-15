@@ -17,7 +17,7 @@ body {
 .croupier-area,
 .player-area {
   width: 75%;
-  height: 50%;
+  height: 10%;
   border: 1px solid white;
   margin-bottom: 25px;
   padding: 1rem;
@@ -31,16 +31,8 @@ body {
 .game-card {
   height: 100%;
 }
+
 .game-cards img {
   width: 100%;
   height: auto;
-}
-
-.game-actions {
-  margin-left: 12%;
-}
-
-.credit {
-  align-items: center;
-  color: wheat;
 }

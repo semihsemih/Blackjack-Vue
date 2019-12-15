@@ -2,7 +2,7 @@ import Vue from "vue";
 import App from "./App.vue";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap/dist/js/bootstrap.min.js";
-import "animate.css"
+import "animate.css";
 import "./assets/scss/style.css";
 
 window._ = require("lodash");
