@@ -1,5 +1,5 @@
 <template>
-  <div class="container" style="margin-top: 20%">
+  <div class="container">
     <div class="row">
       <div class="col-12 mb-5">
         <draggable
@@ -25,12 +25,20 @@
           </div>
         </draggable>
       </div>
-      <div class="col-12 mt-5"><p class="text-center text-white">Total Bet: ${{ totalBet }}</p></div>
-      <div class="col-12 mt-2"><p class="text-center text-white">Your Credit: $1000</p></div>
+      <div class="col-12 mt-5">
+        <p class="text-center text-white">Total Bet: ${{ totalBet }}</p>
+      </div>
+      <div class="col-12 mt-2">
+        <p class="text-center text-white">
+          Your Credit: ${{ remainingCredit }}
+        </p>
+      </div>
     </div>
     <div class="row">
       <div class="col-md-12 d-flex justify-content-center">
-        <button class="btn btn-primary btn-lg" @click="startGame">Deal!!</button>
+        <button class="btn btn-primary btn-lg" @click="startGame">
+          Deal!!
+        </button>
       </div>
     </div>
   </div>
@@ -38,7 +46,7 @@
 
 <script>
 import draggable from "vuedraggable";
-import {eventBus} from "../main";
+import { eventBus } from "../main";
 import chip20 from "../assets/img/chips/chip-20-removebg-preview.png";
 import chip50 from "../assets/img/chips/chip-50-removebg-preview.png";
 import chip100 from "../assets/img/chips/chip-100-removebg-preview.png";
@@ -59,7 +67,8 @@ export default {
         { point: 200, imgSrc: chip200 }
       ],
       bets: [],
-      totalBet: 0
+      totalBet: 0,
+      credit: 0
     };
   },
   methods: {
@@ -68,11 +77,21 @@ export default {
       this.bets.forEach(bet => {
         this.totalBet = bet.point + this.totalBet;
       });
-      return this.totalBet
+      return this.totalBet;
     },
     startGame() {
-      eventBus.$emit("changeComponent", "GameArea");
+      eventBus.updateCredit(this.remainingCredit);
+      eventBus.updateBet(this.totalBet);
+      eventBus.gameComponentSelector("GameArea");
     }
+  },
+  computed: {
+    remainingCredit: function() {
+      return this.credit - this.totalBet;
+    }
+  },
+  created() {
+    this.credit = eventBus.$data.credit;
   }
 };
 </script>

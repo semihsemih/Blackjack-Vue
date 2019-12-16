@@ -9,7 +9,23 @@ window._ = require("lodash");
 
 Vue.config.productionTip = false;
 
-export const eventBus = new Vue();
+export const eventBus = new Vue({
+  data: {
+    credit: 1000,
+    bet: 0
+  },
+  methods: {
+    gameComponentSelector(component) {
+      this.$emit("componentChange", component);
+    },
+    updateCredit(newCredit) {
+      this.credit = newCredit;
+    },
+    updateBet(newBet) {
+      this.bet = newBet;
+    }
+  }
+});
 
 new Vue({
   render: h => h(App)

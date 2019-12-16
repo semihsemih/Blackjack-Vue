@@ -22,7 +22,7 @@ export default {
   name: "StartScreen",
   methods: {
     firstBet() {
-      eventBus.$emit("changeComponent", "StartBetArea");
+      eventBus.gameComponentSelector("StartBetArea");
     }
   }
 };

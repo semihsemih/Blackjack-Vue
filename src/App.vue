@@ -28,6 +28,9 @@ export default {
     eventBus.$on("changeComponent", component => {
       this.activeComponent = component;
     });
+    eventBus.$on("componentChange", component => {
+      this.activeComponent = component;
+    });
   }
 };
 </script>

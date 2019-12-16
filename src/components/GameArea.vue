@@ -8,10 +8,21 @@
       <GameCard :deck="playerHand" />
     </div>
     <h4 class="area-title">Player Hand</h4>
+    <div class="row">
+      <div class="col d-flex justify-content-around">
+        <div style="margin-right: 25px; color: white; font-weight: bold">
+          Bet: ${{ bet }}
+        </div>
+        <div style="margin-left: 25px; color: white; font-weight: bold">
+          Credit: ${{ credit }}
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
 <script>
+import { eventBus } from "../main";
 import GameCard from "./GameCard";
 export default {
   name: "GameArea",
@@ -73,7 +84,9 @@ export default {
       ],
       turnDeck: null,
       playerHand: [],
-      croupierHand: []
+      croupierHand: [],
+      bet: null,
+      credit: null
     };
   },
   methods: {
@@ -99,6 +112,8 @@ export default {
   },
   created() {
     this.gameStart();
+    this.bet = eventBus.$data.bet;
+    this.credit = eventBus.$data.credit;
   }
 };
 </script>
