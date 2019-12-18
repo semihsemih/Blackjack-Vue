@@ -1,13 +1,14 @@
 <template>
   <div class="game-area">
-    <h4 class="area-title">Croupier Hand</h4>
+    <v-dialog />
+    <h4 class="area-title">Croupier Hand ({{ croupierPoint }})</h4>
     <div class="croupier-area animated fadeIn">
       <GameCard :deck="croupierHand" />
     </div>
     <div class="player-area animated fadeIn">
       <GameCard :deck="playerHand" />
     </div>
-    <h4 class="area-title">Player Hand</h4>
+    <h4 class="area-title">Player Hand ({{ playerPoint }})</h4>
     <div class="row">
       <div class="col d-flex justify-content-around">
         <div style="margin-right: 25px; color: white; font-weight: bold">
@@ -16,6 +17,13 @@
         <div style="margin-left: 25px; color: white; font-weight: bold">
           Credit: ${{ credit }}
         </div>
+      </div>
+      <div class="col-12 d-flex justify-content-center mt-3">
+        <button type="button" class="btn btn-sm btn-primary mr-2 w-25">Double</button>
+        <button type="button" class="btn btn-sm btn-primary w-25" @click="hit">
+          Hit
+        </button>
+        <button type="button" class="btn btn-sm btn-primary ml-2 w-25">Stand</button>
       </div>
     </div>
   </div>
@@ -105,6 +113,50 @@ export default {
       let selectedCard = this.turnDeck[randomNumber];
       hand.push(selectedCard);
       this.turnDeck.splice(this.turnDeck.indexOf(selectedCard), 1);
+    },
+    hit() {
+      this.cardDealer(this.playerHand);
+    },
+    showBustModal() {
+      this.$modal.show("dialog", {
+        title: "Bust",
+        text: "You Bust! Dealer Wins!",
+        buttons: [
+          {
+            title: "Quit Game",
+            default: true,
+            handler: () => {
+              eventBus.resetGame();
+              eventBus.gameComponentSelector("StartScreen");
+            }
+          },
+          {
+            title: "Go On",
+            handler: () => {
+              eventBus.gameComponentSelector("StartBetArea");
+            }
+          }
+        ]
+      });
+    }
+  },
+  computed: {
+    playerPoint: function() {
+      let point = 0;
+      this.playerHand.forEach(card => {
+        point = point + card.point;
+      });
+      if (point > 21) {
+        this.showBustModal();
+      }
+      return point;
+    },
+    croupierPoint: function() {
+      let point = 0;
+      this.croupierHand.forEach(card => {
+        point = point + card.point;
+      });
+      return point;
     }
   },
   components: {
@@ -112,8 +164,8 @@ export default {
   },
   created() {
     this.gameStart();
-    this.bet = eventBus.$data.bet;
-    this.credit = eventBus.$data.credit;
+    this.bet = eventBus.$data.gameBalance.bet;
+    this.credit = eventBus.$data.gameBalance.credit;
   }
 };
 </script>

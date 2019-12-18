@@ -112,9 +112,8 @@ export default {
         eventBus.updateBet(this.totalBet);
         eventBus.gameComponentSelector("GameArea");
       } else {
-        this.requiredBetAlertModal()
+        this.requiredBetAlertModal();
       }
-
     }
   },
   computed: {
@@ -123,7 +122,7 @@ export default {
     }
   },
   created() {
-    this.credit = eventBus.$data.credit;
+    this.credit = eventBus.$data.gameBalance.credit;
   }
 };
 </script>

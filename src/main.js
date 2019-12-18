@@ -13,18 +13,26 @@ Vue.use(VModal, { dialog: true });
 
 export const eventBus = new Vue({
   data: {
-    credit: 1000,
-    bet: 0
+    gameBalance: {
+      credit: 1000,
+      bet: 0
+    }
   },
   methods: {
     gameComponentSelector(component) {
       this.$emit("componentChange", component);
     },
     updateCredit(newCredit) {
-      this.credit = newCredit;
+      this.gameBalance.credit = newCredit;
     },
     updateBet(newBet) {
-      this.bet = newBet;
+      this.gameBalance.bet = newBet;
+    },
+    resetGame() {
+      this.gameBalance = {
+        credit: 1000,
+        bet: 0
+      }
     }
   }
 });
