@@ -1,5 +1,6 @@
 <template>
   <div class="container">
+    <v-dialog />
     <div class="row">
       <div class="col-12 mb-5">
         <draggable
@@ -76,13 +77,44 @@ export default {
       this.totalBet = 0;
       this.bets.forEach(bet => {
         this.totalBet = bet.point + this.totalBet;
+        if (this.totalBet > this.credit) {
+          this.insufficientBalanceAlertModal();
+          this.totalBet = this.totalBet - bet.point;
+          this.bets.pop();
+        }
       });
-      return this.totalBet;
+    },
+    insufficientBalanceAlertModal() {
+      this.$modal.show("dialog", {
+        title: "Alert!",
+        text: "Your balance is insufficient for this bet!",
+        buttons: [
+          {
+            title: "Ok"
+          }
+        ]
+      });
+    },
+    requiredBetAlertModal() {
+      this.$modal.show("dialog", {
+        title: "Alert!",
+        text: "You must bet to enter the game!",
+        buttons: [
+          {
+            title: "Ok"
+          }
+        ]
+      });
     },
     startGame() {
-      eventBus.updateCredit(this.remainingCredit);
-      eventBus.updateBet(this.totalBet);
-      eventBus.gameComponentSelector("GameArea");
+      if (this.totalBet > 0) {
+        eventBus.updateCredit(this.remainingCredit);
+        eventBus.updateBet(this.totalBet);
+        eventBus.gameComponentSelector("GameArea");
+      } else {
+        this.requiredBetAlertModal()
+      }
+
     }
   },
   computed: {
