@@ -3,7 +3,9 @@
     <div class="header mt-2 mb-5">
       <h1>Blackjack Vue</h1>
     </div>
-    <component :is="activeComponent" />
+    <transition-group name="slideContainer" mode="out-in">
+    <component key="mainComponent" :is="activeComponent" />
+    </transition-group>
   </div>
 </template>
 
@@ -35,4 +37,32 @@ export default {
 };
 </script>
 
-<style></style>
+<style>
+  .slideContainer-enter-active{
+    animation: slide-in 1s ease-out forwards;
+  }
+  .slideContainer-leave-active{
+    animation: slide-out 1s ease-out forwards;
+  }
+
+  @keyframes slide-in {
+    from{
+      transform: translateY(-1000px);
+      opacity: 0;
+    }
+    to{
+      transform: translateY(0px);
+      opacity: 1;
+    }
+  }
+  @keyframes slide-out {
+    from{
+      transform: translateY(0px);
+      opacity: 1;
+    }
+    to{
+      transform: translateY(1000px);
+      opacity: 0;
+    }
+  }
+</style>

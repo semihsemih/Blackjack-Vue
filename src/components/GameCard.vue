@@ -1,7 +1,7 @@
 <template>
   <div class="game-cards">
     <div
-      class="item animated flipInX"
+      class="item animated flipInX delay-1s"
       v-for="card in deck"
       v-bind:key="card.id"
     >
