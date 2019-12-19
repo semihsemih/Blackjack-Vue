@@ -146,6 +146,32 @@ export default {
       this.playerHand.forEach(card => {
         point = point + card.point;
       });
+      if (this.playerHand.length === 2 && point === 21) {
+        // eslint-disable-next-line vue/no-async-in-computed-properties
+        setTimeout(() => {
+          this.$modal.show("dialog", {
+          title: "Blackjack! You Win!",
+          text: `Dealer Lost! Your Return $${this.bet * 2}`,
+          buttons: [
+            {
+              title: "Quit Game",
+              default: true,
+              handler: () => {
+                eventBus.resetGame();
+                eventBus.gameComponentSelector("StartScreen");
+              }
+            },
+            {
+              title: "Go On",
+              handler: () => {
+                eventBus.gameComponentSelector("StartBetArea");
+              }
+            }
+          ]
+        });
+        }, 2000)
+
+      }
       if (point > 21) {
         this.showBustModal();
       }
