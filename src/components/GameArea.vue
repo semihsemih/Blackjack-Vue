@@ -1,6 +1,6 @@
 <template>
   <div class="game-area">
-    <v-dialog />
+    <v-dialog :click-to-close="false"/>
     <h4 class="area-title">Croupier Hand ({{ croupierPoint }})</h4>
     <div class="croupier-area animated fadeIn">
       <GameCard :deck="croupierHand" />
@@ -19,11 +19,15 @@
         </div>
       </div>
       <div class="col-12 d-flex justify-content-center mt-3">
-        <button type="button" class="btn btn-sm btn-primary mr-2 w-25">Double</button>
+        <button type="button" class="btn btn-sm btn-primary mr-2 w-25">
+          Double
+        </button>
         <button type="button" class="btn btn-sm btn-primary w-25" @click="hit">
           Hit
         </button>
-        <button type="button" class="btn btn-sm btn-primary ml-2 w-25">Stand</button>
+        <button type="button" class="btn btn-sm btn-primary ml-2 w-25">
+          Stand
+        </button>
       </div>
     </div>
   </div>
@@ -124,7 +128,6 @@ export default {
         buttons: [
           {
             title: "Quit Game",
-            default: true,
             handler: () => {
               eventBus.resetGame();
               eventBus.gameComponentSelector("StartScreen");
@@ -132,7 +135,31 @@ export default {
           },
           {
             title: "Go On",
+            default: true,
             handler: () => {
+              eventBus.gameComponentSelector("StartBetArea");
+            }
+          }
+        ]
+      });
+    },
+    showBlackjackModal() {
+      this.$modal.show("dialog", {
+        title: "Blackjack! You Win!",
+        text: `Dealer Lost! Your Return $${this.bet * 1.5}`,
+        buttons: [
+          {
+            title: "Quit Game",
+            handler: () => {
+              eventBus.resetGame();
+              eventBus.gameComponentSelector("StartScreen");
+            }
+          },
+          {
+            title: "Go On",
+            default: true,
+            handler: () => {
+              eventBus.updateCredit(this.bet * 1.5 + this.credit);
               eventBus.gameComponentSelector("StartBetArea");
             }
           }
@@ -149,28 +176,8 @@ export default {
       if (this.playerHand.length === 2 && point === 21) {
         // eslint-disable-next-line vue/no-async-in-computed-properties
         setTimeout(() => {
-          this.$modal.show("dialog", {
-          title: "Blackjack! You Win!",
-          text: `Dealer Lost! Your Return $${this.bet * 2}`,
-          buttons: [
-            {
-              title: "Quit Game",
-              default: true,
-              handler: () => {
-                eventBus.resetGame();
-                eventBus.gameComponentSelector("StartScreen");
-              }
-            },
-            {
-              title: "Go On",
-              handler: () => {
-                eventBus.gameComponentSelector("StartBetArea");
-              }
-            }
-          ]
-        });
-        }, 2000)
-
+          this.showBlackjackModal();
+        }, 2000);
       }
       if (point > 21) {
         this.showBustModal();
