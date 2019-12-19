@@ -159,7 +159,7 @@ export default {
             title: "Go On",
             default: true,
             handler: () => {
-              eventBus.updateCredit(this.bet * 1.5 + this.credit);
+              eventBus.updateCredit(this.bet + this.bet * 1.5 + this.credit);
               eventBus.gameComponentSelector("StartBetArea");
             }
           }
@@ -170,18 +170,31 @@ export default {
   computed: {
     playerPoint: function() {
       let point = 0;
+      let aceTypeCard = 0;
       this.playerHand.forEach(card => {
+        if (card.type === "ace")
+          aceTypeCard = aceTypeCard + 1;
         point = point + card.point;
       });
+      if (aceTypeCard > 0) {
+        if (point > 21) {
+          point = point - 10;
+          if (point > 21) {
+            this.showBustModal();
+          }
+        }
+      } else {
+        if (point > 21) {
+          this.showBustModal();
+        }
+      }
       if (this.playerHand.length === 2 && point === 21) {
         // eslint-disable-next-line vue/no-async-in-computed-properties
         setTimeout(() => {
           this.showBlackjackModal();
         }, 2000);
       }
-      if (point > 21) {
-        this.showBustModal();
-      }
+
       return point;
     },
     croupierPoint: function() {
