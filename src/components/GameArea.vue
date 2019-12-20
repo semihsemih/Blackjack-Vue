@@ -25,7 +25,11 @@
         <button type="button" class="btn btn-sm btn-primary w-25" @click="hit">
           Hit
         </button>
-        <button type="button" class="btn btn-sm btn-primary ml-2 w-25">
+        <button
+          type="button"
+          class="btn btn-sm btn-primary ml-2 w-25"
+          @click="stand"
+        >
           Stand
         </button>
       </div>
@@ -121,6 +125,32 @@ export default {
     hit() {
       this.cardDealer(this.playerHand);
     },
+    stand() {
+      if (this.croupierPoint < 17) {
+        while (this.croupierPoint < 17) {
+          this.cardDealer(this.croupierHand);
+        }
+        if (this.croupierPoint > 21) {
+          this.showWinModal();
+        } else {
+          if (this.croupierPoint < this.playerPoint) {
+            this.showWinModal();
+          } else if (this.croupierPoint > this.playerPoint) {
+            this.showBustModal();
+          } else if (this.croupierPoint === this.playerPoint) {
+            alert("eşitlik");
+          }
+        }
+      } else {
+        if (this.croupierPoint < this.playerPoint) {
+          this.showWinModal();
+        } else if (this.croupierPoint > this.playerPoint) {
+          this.showBustModal();
+        } else if (this.croupierPoint === this.playerPoint) {
+          alert("eşitlik");
+        }
+      }
+    },
     showBustModal() {
       this.$modal.show("dialog", {
         title: "Bust",
@@ -143,10 +173,33 @@ export default {
         ]
       });
     },
+    showWinModal() {
+      this.$modal.show("dialog", {
+        title: "Win",
+        text: `Dealer Lost! Your Return $${this.bet + this.bet}`,
+        buttons: [
+          {
+            title: "Quit Game",
+            handler: () => {
+              eventBus.resetGame();
+              eventBus.gameComponentSelector("StartScreen");
+            }
+          },
+          {
+            title: "Go On",
+            default: true,
+            handler: () => {
+              eventBus.updateCredit(this.bet + this.bet + this.credit);
+              eventBus.gameComponentSelector("StartBetArea");
+            }
+          }
+        ]
+      });
+    },
     showBlackjackModal() {
       this.$modal.show("dialog", {
         title: "Blackjack! You Win!",
-        text: `Dealer Lost! Your Return $${this.bet * 1.5}`,
+        text: `Dealer Lost! Your Return $${this.bet + this.bet * 1.5}`,
         buttons: [
           {
             title: "Quit Game",
@@ -172,13 +225,12 @@ export default {
       let point = 0;
       let aceTypeCard = 0;
       this.playerHand.forEach(card => {
-        if (card.type === "ace")
-          aceTypeCard = aceTypeCard + 1;
+        if (card.type === "ace") aceTypeCard = aceTypeCard + 1;
         point = point + card.point;
       });
       if (aceTypeCard > 1) {
         if (point > 21) {
-          point = point - (aceTypeCard * 10);
+          point = point - aceTypeCard * 10;
           if (point > 21) {
             this.showBustModal();
           }
@@ -190,8 +242,7 @@ export default {
             this.showBustModal();
           }
         }
-      }
-      else {
+      } else {
         if (point > 21) {
           this.showBustModal();
         }
@@ -207,9 +258,30 @@ export default {
     },
     croupierPoint: function() {
       let point = 0;
+      let aceTypeCard = 0;
       this.croupierHand.forEach(card => {
+        if (card.type === "ace") aceTypeCard = aceTypeCard + 1;
         point = point + card.point;
       });
+      if (aceTypeCard > 1) {
+        if (point > 21) {
+          point = point - aceTypeCard * 10;
+          if (point > 21) {
+            this.showWinModal();
+          }
+        }
+      } else if (aceTypeCard === 1) {
+        if (point > 21) {
+          point = point - 10;
+          if (point > 21) {
+            this.showWinModal();
+          }
+        }
+      } else {
+        if (point > 21) {
+          this.showWinModal();
+        }
+      }
       return point;
     }
   },
