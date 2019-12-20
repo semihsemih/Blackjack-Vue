@@ -176,14 +176,22 @@ export default {
           aceTypeCard = aceTypeCard + 1;
         point = point + card.point;
       });
-      if (aceTypeCard > 0) {
+      if (aceTypeCard > 1) {
+        if (point > 21) {
+          point = point - (aceTypeCard * 10);
+          if (point > 21) {
+            this.showBustModal();
+          }
+        }
+      } else if (aceTypeCard === 1) {
         if (point > 21) {
           point = point - 10;
           if (point > 21) {
             this.showBustModal();
           }
         }
-      } else {
+      }
+      else {
         if (point > 21) {
           this.showBustModal();
         }
