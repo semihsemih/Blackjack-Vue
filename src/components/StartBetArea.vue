@@ -37,7 +37,7 @@
     </div>
     <div class="row">
       <div class="col-md-12 d-flex justify-content-center">
-        <button class="btn btn-primary btn-lg" @click="startGame">
+        <button class="btn btn-primary" @click="startGame">
           Deal!!
         </button>
       </div>

@@ -1,7 +1,7 @@
 <template>
   <div class="game-area">
     <v-dialog :click-to-close="false" />
-    <h4 class="area-title">Croupier Hand ({{ croupierPoint }})</h4>
+    <h4 class="area-title">Croupier Hand <span v-show="false">({{ croupierPoint }})</span></h4>
     <div class="croupier-area animated fadeIn">
       <GameCard :deck="croupierHand" />
     </div>
@@ -19,9 +19,6 @@
         </div>
       </div>
       <div class="col-12 d-flex justify-content-center mt-3">
-        <button type="button" class="btn btn-sm btn-primary mr-2 w-25">
-          Double
-        </button>
         <button type="button" class="btn btn-sm btn-primary w-25" @click="hit">
           Hit
         </button>
@@ -102,7 +99,8 @@ export default {
       playerHand: [],
       croupierHand: [],
       bet: null,
-      credit: null
+      credit: null,
+      hiddenCardId: null
     };
   },
   methods: {
@@ -115,6 +113,7 @@ export default {
       while (this.croupierHand.length < 2) {
         this.cardDealer(this.croupierHand);
       }
+      this.cardBackOn();
     },
     cardDealer(hand) {
       const randomNumber = Math.floor(Math.random() * this.turnDeck.length);
@@ -122,30 +121,50 @@ export default {
       hand.push(selectedCard);
       this.turnDeck.splice(this.turnDeck.indexOf(selectedCard), 1);
     },
+    cardBackOn() {
+      let card = this.croupierHand[0];
+      this.hiddenCardId = card.id;
+      card.id = "red_back";
+    },
+    cardBackOff() {
+      let card = this.croupierHand[0];
+      return card.id = this.hiddenCardId;
+    },
     hit() {
       this.cardDealer(this.playerHand);
     },
     stand() {
+      this.cardBackOff();
       if (this.croupierPoint < 17) {
         while (this.croupierPoint < 17) {
           this.cardDealer(this.croupierHand);
         }
         if (this.croupierPoint > 21) {
-          this.showWinModal();
+          setTimeout(() => {
+            this.showWinModal();
+          }, 2500)
         } else {
           if (this.croupierPoint < this.playerPoint) {
-            this.showWinModal();
+            setTimeout(() => {
+              this.showWinModal();
+            }, 2500)
           } else if (this.croupierPoint > this.playerPoint) {
-            this.showBustModal();
+            setTimeout(() => {
+              this.showBustModal();
+            }, 2500)
           } else if (this.croupierPoint === this.playerPoint) {
             alert("eşitlik");
           }
         }
       } else {
         if (this.croupierPoint < this.playerPoint) {
-          this.showWinModal();
+          setTimeout(() => {
+            this.showWinModal();
+          }, 2500)
         } else if (this.croupierPoint > this.playerPoint) {
-          this.showBustModal();
+          setTimeout(() => {
+            this.showBustModal();
+          }, 2500)
         } else if (this.croupierPoint === this.playerPoint) {
           alert("eşitlik");
         }
@@ -232,19 +251,28 @@ export default {
         if (point > 21) {
           point = point - aceTypeCard * 10;
           if (point > 21) {
-            this.showBustModal();
+            // eslint-disable-next-line vue/no-async-in-computed-properties
+            setTimeout(() => {
+              this.showBustModal();
+            }, 2500)
           }
         }
       } else if (aceTypeCard === 1) {
         if (point > 21) {
           point = point - 10;
           if (point > 21) {
-            this.showBustModal();
+            // eslint-disable-next-line vue/no-async-in-computed-properties
+            setTimeout(() => {
+              this.showBustModal();
+            }, 2500)
           }
         }
       } else {
         if (point > 21) {
-          this.showBustModal();
+          // eslint-disable-next-line vue/no-async-in-computed-properties
+          setTimeout(() => {
+            this.showBustModal();
+          }, 2500)
         }
       }
       if (this.playerHand.length === 2 && point === 21) {
@@ -267,19 +295,28 @@ export default {
         if (point > 21) {
           point = point - aceTypeCard * 10;
           if (point > 21) {
-            this.showWinModal();
+            // eslint-disable-next-line vue/no-async-in-computed-properties
+            setTimeout(() => {
+              this.showWinModal();
+            }, 2500)
           }
         }
       } else if (aceTypeCard === 1) {
         if (point > 21) {
           point = point - 10;
           if (point > 21) {
-            this.showWinModal();
+            // eslint-disable-next-line vue/no-async-in-computed-properties
+            setTimeout(() => {
+              this.showWinModal();
+            }, 2500)
           }
         }
       } else {
         if (point > 21) {
-          this.showWinModal();
+          // eslint-disable-next-line vue/no-async-in-computed-properties
+          setTimeout(() => {
+            this.showWinModal();
+          }, 2500)
         }
       }
       return point;

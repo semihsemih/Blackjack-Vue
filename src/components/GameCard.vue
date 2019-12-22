@@ -1,7 +1,8 @@
 <template>
   <div class="game-cards">
     <div
-      class="item animated flipInX delay-1s"
+      class="item animated flipInX"
+      :class="{delayAnimate : delay}"
       v-for="card in deck"
       v-bind:key="card.id"
     >
@@ -13,8 +14,22 @@
 <script>
 export default {
   name: "GameCard",
-  props: ["deck"]
+  props: ["deck"],
+  computed: {
+    delay: function () {
+      let delay = true;
+      if (this.deck.length > 2) {
+        delay = false;
+      }
+      return delay
+    }
+  }
 };
 </script>
 
-<style scoped></style>
+<style scoped>
+  .delayAnimate {
+    -webkit-animation-delay: 1s;
+    animation-delay: 1s;
+  }
+</style>
