@@ -58,7 +58,7 @@ export default {
         { id: "JC", point: 10, suit: "clubs", type: "jack" },
         { id: "KC", point: 10, suit: "clubs", type: "king" },
         { id: "QC", point: 10, suit: "clubs", type: "queen" },
-        { id: "AD", point: 11, suit: "diamonds", type: "ace" },
+        { id: "aceDiamond", point: 11, suit: "diamonds", type: "ace" },
         { id: "2D", point: 2, suit: "diamonds", type: "numbers" },
         { id: "3D", point: 3, suit: "diamonds", type: "numbers" },
         { id: "4D", point: 4, suit: "diamonds", type: "numbers" },
