@@ -1,4 +1,13 @@
-# blackjack
+# Blackjack Vue :spades: :hearts: :clubs: :diamonds:
+
+## :rocket: Play Now
+(https://semihsemih.github.io/Blackjack-Vue/)
+
+![](src/assets/bjackdemo.png)
+
+## Introduction
+
+Blackjack Vue is a single-player HTML5 blackjack game built with [vue](https://vuejs.org/).
 
 ## Project setup
 ```
