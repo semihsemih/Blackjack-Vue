@@ -106,6 +106,21 @@ export default {
         ]
       });
     },
+    insufficientCreditModal() {
+      this.$modal.show('dialog', {
+        title: 'Insufficient Credit',
+        text: 'Your credit is insufficient for this bet!',
+        buttons: [
+          {
+            title: 'New Game',
+            handler: () => {
+              eventBus.resetGame();
+              eventBus.gameComponentSelector("StartScreen");
+            }
+          }
+        ]
+      })
+    },
     startGame() {
       if (this.totalBet > 0) {
         eventBus.updateCredit(this.remainingCredit);
@@ -123,6 +138,11 @@ export default {
   },
   created() {
     this.credit = eventBus.$data.gameBalance.credit;
+    if (this.credit < 20) {
+      setTimeout(() => {
+        this.insufficientCreditModal();
+      }, 1200)
+    }
   }
 };
 </script>

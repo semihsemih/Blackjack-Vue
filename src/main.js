@@ -32,7 +32,7 @@ export const eventBus = new Vue({
       this.gameBalance = {
         credit: 1000,
         bet: 0
-      }
+      };
     }
   }
 });

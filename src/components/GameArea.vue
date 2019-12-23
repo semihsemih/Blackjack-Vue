@@ -1,7 +1,9 @@
 <template>
   <div class="game-area">
     <v-dialog :click-to-close="false" />
-    <h4 class="area-title">Croupier Hand <span v-show="false">({{ croupierPoint }})</span></h4>
+    <h4 class="area-title">
+      Croupier Hand <span class="animated fadeIn" v-show="croupierPointShow">({{ croupierPoint }})</span>
+    </h4>
     <div class="croupier-area animated fadeIn">
       <GameCard :deck="croupierHand" />
     </div>
@@ -100,7 +102,8 @@ export default {
       croupierHand: [],
       bet: null,
       credit: null,
-      hiddenCardId: null
+      hiddenCardId: null,
+      croupierPointShow: false
     };
   },
   methods: {
@@ -127,8 +130,9 @@ export default {
       card.id = "red_back";
     },
     cardBackOff() {
+      this.croupierPointShow = true;
       let card = this.croupierHand[0];
-      return card.id = this.hiddenCardId;
+      return (card.id = this.hiddenCardId);
     },
     hit() {
       this.cardDealer(this.playerHand);
@@ -142,31 +146,35 @@ export default {
         if (this.croupierPoint > 21) {
           setTimeout(() => {
             this.showWinModal();
-          }, 2500)
+          }, 2500);
         } else {
           if (this.croupierPoint < this.playerPoint) {
             setTimeout(() => {
               this.showWinModal();
-            }, 2500)
+            }, 2500);
           } else if (this.croupierPoint > this.playerPoint) {
             setTimeout(() => {
               this.showBustModal();
-            }, 2500)
+            }, 2500);
           } else if (this.croupierPoint === this.playerPoint) {
-            alert("eşitlik");
+            setTimeout(() => {
+              this.equalHandsModal();
+            }, 2500);
           }
         }
       } else {
         if (this.croupierPoint < this.playerPoint) {
           setTimeout(() => {
             this.showWinModal();
-          }, 2500)
+          }, 2500);
         } else if (this.croupierPoint > this.playerPoint) {
           setTimeout(() => {
             this.showBustModal();
-          }, 2500)
+          }, 2500);
         } else if (this.croupierPoint === this.playerPoint) {
-          alert("eşitlik");
+          setTimeout(() => {
+            this.equalHandsModal();
+          }, 2500);
         }
       }
     },
@@ -215,6 +223,29 @@ export default {
         ]
       });
     },
+    equalHandsModal() {
+      this.$modal.show("dialog", {
+        title: "Equal Hands",
+        text: `In case of equal hands only the bet is returned`,
+        buttons: [
+          {
+            title: "Quit Game",
+            handler: () => {
+              eventBus.resetGame();
+              eventBus.gameComponentSelector("StartScreen");
+            }
+          },
+          {
+            title: "Go On",
+            default: true,
+            handler: () => {
+              eventBus.updateCredit(this.bet + this.credit);
+              eventBus.gameComponentSelector("StartBetArea");
+            }
+          }
+        ]
+      });
+    },
     showBlackjackModal() {
       this.$modal.show("dialog", {
         title: "Blackjack! You Win!",
@@ -251,28 +282,31 @@ export default {
         if (point > 21) {
           point = point - aceTypeCard * 10;
           if (point > 21) {
+            this.cardBackOff();
             // eslint-disable-next-line vue/no-async-in-computed-properties
             setTimeout(() => {
               this.showBustModal();
-            }, 2500)
+            }, 2500);
           }
         }
       } else if (aceTypeCard === 1) {
         if (point > 21) {
           point = point - 10;
           if (point > 21) {
+            this.cardBackOff();
             // eslint-disable-next-line vue/no-async-in-computed-properties
             setTimeout(() => {
               this.showBustModal();
-            }, 2500)
+            }, 2500);
           }
         }
       } else {
         if (point > 21) {
+          this.cardBackOff();
           // eslint-disable-next-line vue/no-async-in-computed-properties
           setTimeout(() => {
             this.showBustModal();
-          }, 2500)
+          }, 2500);
         }
       }
       if (this.playerHand.length === 2 && point === 21) {
@@ -298,7 +332,7 @@ export default {
             // eslint-disable-next-line vue/no-async-in-computed-properties
             setTimeout(() => {
               this.showWinModal();
-            }, 2500)
+            }, 2500);
           }
         }
       } else if (aceTypeCard === 1) {
@@ -308,7 +342,7 @@ export default {
             // eslint-disable-next-line vue/no-async-in-computed-properties
             setTimeout(() => {
               this.showWinModal();
-            }, 2500)
+            }, 2500);
           }
         }
       } else {
@@ -316,7 +350,7 @@ export default {
           // eslint-disable-next-line vue/no-async-in-computed-properties
           setTimeout(() => {
             this.showWinModal();
-          }, 2500)
+          }, 2500);
         }
       }
       return point;
